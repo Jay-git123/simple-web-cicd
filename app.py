@@ -38,10 +38,12 @@ HTML = """<!DOCTYPE html>
         <p class="version">Flask App v1.0 | Python {{ python_version }}</p>
         <div class="status">✅ 服务运行正常</div>
         <div class="info">
-            <p><span>容器 ID：</span>{{ hostname }}</p>
-            <p><span>部署时间：</span>{{ deploy_time }}</p>
-            <p><span>环境：</span>{{ environment }}</p>
-        </div>
+    <p><span>容器 ID：</span>{{ hostname }}</p>
+    <p><span>部署时间：</span>{{ deploy_time }}</p>
+    <p><span>环境：</span>{{ environment }}</p>
+    <p><span>学生姓名：</span>杨金鑫</p>
+    <p><span>学生学号：</span>2440664317</p>
+    </div>
     </div>
 </body>
 </html>"""
