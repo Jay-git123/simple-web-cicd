@@ -89,10 +89,9 @@ jobs:
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }} # Secret值已改为admin
-          key: ${{ secrets.SSH_PRIVATE_KEY }} # 私钥登录参数
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_PORT }}
-          insecure_ignore_host_key: true # 跳过主机指纹校验
           source: "docker-compose.prod.yml,simple-web.tar.gz"
           target: "/opt/simple-web/"
           strip_components: 0
@@ -100,14 +99,15 @@ jobs:
       - name: 加载镜像并启动服务
         uses: appleboy/ssh-action@v1.0.3
         with:
-          # 和上方scp配置保持一致，已删除password行
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_PORT }}
-          insecure_ignore_host_key: true
           script: |
             set -e
+            # 新增：自动创建目录并赋予admin权限，解决文件夹不存在报错
+            sudo mkdir -p /opt/simple-web
+            sudo chown admin:admin /opt/simple-web
             cd /opt/simple-web
 
             echo "=== [1/5] 加载 Docker 镜像 ==="
@@ -126,7 +126,6 @@ jobs:
 
             echo "=== [5/5] 健康检查 ==="
             sleep 3
-            # Flask服务端口5000
             HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5000 || echo "000")
             if [ "$HTTP_CODE" = "200" ]; then
               echo "✅ 部署成功！HTTP: $HTTP_CODE"
