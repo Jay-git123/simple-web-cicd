@@ -88,12 +88,11 @@ jobs:
       - name: 传输 compose + 镜像到服务器
         uses: appleboy/scp-action@v0.1.7
         with:
-          # 替换为你已创建的Secret名称
           host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PWD }}
+          username: ${{ secrets.SERVER_USER }} # Secret值已改为admin
+          key: ${{ secrets.SSH_PRIVATE_KEY }} # 私钥登录参数
           port: ${{ secrets.SERVER_PORT }}
-          insecure_ignore_host_key: true  # 新增此行，解决指纹阻断密码登录
+          insecure_ignore_host_key: true # 跳过主机指纹校验
           source: "docker-compose.prod.yml,simple-web.tar.gz"
           target: "/opt/simple-web/"
           strip_components: 0
@@ -101,12 +100,12 @@ jobs:
       - name: 加载镜像并启动服务
         uses: appleboy/ssh-action@v1.0.3
         with:
-          # 和上方scp保持一致
+          # 和上方scp配置保持一致，已删除password行
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PWD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_PORT }}
-          insecure_ignore_host_key: true  # 同步新增
+          insecure_ignore_host_key: true
           script: |
             set -e
             cd /opt/simple-web
@@ -127,7 +126,7 @@ jobs:
 
             echo "=== [5/5] 健康检查 ==="
             sleep 3
-            # 重点修正：Flask服务端口是5000，原代码写的80会检测失败
+            # Flask服务端口5000
             HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5000 || echo "000")
             if [ "$HTTP_CODE" = "200" ]; then
               echo "✅ 部署成功！HTTP: $HTTP_CODE"
@@ -141,7 +140,7 @@ jobs:
             docker compose ps
 
   # ============================================
-  # Job 4: 通知
+  # Job 4: 通知（已修复SSH_HOST变量错误）
   # ============================================
   notify:
     name: "④ 结果通知"
