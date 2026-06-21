@@ -27,7 +27,7 @@ HTML = """<!DOCTYPE html>
         .version { color: #764ba2; font-size: 14px; font-weight: 600; margin-bottom: 24px; }
         .status { display: inline-block; background: #e8f5e9; color: #2e7d32;
                   padding: 6px 16px; border-radius: 20px; font-size: 14px; margin-bottom: 24px; }
-        .info { background: #f5f5f5; border-radius: 8px; padding: 16px;
+        .info { background: #f5f5f5; border-radius: 8px; padding: 16px; 
                 text-align: left; font-size: 13px; color: #666; line-height: 1.8; }
         .info span { color: #333; font-weight: 600; }
     </style>
