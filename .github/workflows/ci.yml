@@ -157,5 +157,5 @@ jobs:
           echo "  ③ 生产部署 : ${{ needs.deploy.result }}"
           echo "========================================="
           if [ "${{ needs.deploy.result }}" = "success" ]; then
-            echo "  🌐 http://${{ secrets.SSH_HOST }}"
+            echo "  🌐 http://${{ secrets.SERVER_HOST }}:5000"
           fi
