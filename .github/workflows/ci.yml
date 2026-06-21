@@ -93,6 +93,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PWD }}
           port: ${{ secrets.SERVER_PORT }}
+          insecure_ignore_host_key: true  # 新增此行，解决指纹阻断密码登录
           source: "docker-compose.prod.yml,simple-web.tar.gz"
           target: "/opt/simple-web/"
           strip_components: 0
@@ -105,6 +106,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PWD }}
           port: ${{ secrets.SERVER_PORT }}
+          insecure_ignore_host_key: true  # 同步新增
           script: |
             set -e
             cd /opt/simple-web
