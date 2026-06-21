@@ -66,7 +66,7 @@ jobs:
           path: /tmp/simple-web.tar.gz
           retention-days: 1
 
-  # ============================================
+    # ============================================
   # Job 3: 部署到阿里云 ECS
   # ============================================
   deploy:
@@ -93,7 +93,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_PORT }}
           source: "docker-compose.prod.yml,simple-web.tar.gz"
-          target: "/opt/simple-web/"
+          target: "/home/admin/simple-web/" # 路径修改为用户家目录
           strip_components: 0
 
       - name: 加载镜像并启动服务
@@ -105,10 +105,8 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           script: |
             set -e
-            # 新增：自动创建目录并赋予admin权限，解决文件夹不存在报错
-            sudo mkdir -p /opt/simple-web
-            sudo chown admin:admin /opt/simple-web
-            cd /opt/simple-web
+            # 同步修改进入目录路径
+            cd /home/admin/simple-web
 
             echo "=== [1/5] 加载 Docker 镜像 ==="
             gunzip -f simple-web.tar.gz
