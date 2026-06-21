@@ -1,7 +1,7 @@
 """
 极简 Flask Web 应用 — CI/CD 实验演示
 """
-from flask import Flask, render_template_string
+from flask import Flask, render_template_string 
 
 app = Flask(__name__)
 
